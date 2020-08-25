@@ -1,16 +1,17 @@
 import { applyMiddleware, createStore, compose } from 'redux';
 import { createWrapper } from 'next-redux-wrapper';
 import { composeWithDevTools } from 'redux-devtools-extension';
-
+import { createLogger } from 'redux-logger';
+import ReduxThunk from 'redux-thunk';
+import { createPromise } from 'redux-promise-middleware';
 import reducer from '../reducers';
 
-const loggerMiddleware = ({ dispatch, getState }) => (next) => (action) => {
-  console.log(action);
-  return next(action);
-};
-
+const logger = createLogger();
+const customizedPromiseMiddleware = createPromise({
+  promiseTypeSuffixes: ['REQUEST', 'SUCCESS', 'FAILURE'],
+});
 const configureStore = () => {
-  const middlewares = [loggerMiddleware];
+  const middlewares = [logger, ReduxThunk, customizedPromiseMiddleware];
   const enhancer =
     process.env.NODE_ENV === 'production'
       ? compose(applyMiddleware(...middlewares))
