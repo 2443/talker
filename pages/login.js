@@ -1,19 +1,30 @@
 import Link from 'next/link';
-import styled from '@emotion/styled';
 import { Card, Form, Input, Button } from 'antd';
 import SignLayout from '../components/SignLayout';
 
-import { useState } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
+import useInput from '../hooks/useInput';
+import { login } from '../actions/user';
+import { useSelector, useDispatch } from 'react-redux';
+import { useRouter } from 'next/router';
 
 const Login = () => {
-  const onFinish = (values) => {
-    console.log('Success:', values);
-  };
+  const dispatch = useDispatch();
+  const { me, loading } = useSelector((state) => state.user);
+  const [email, setEmail, changeEmail] = useInput('');
+  const [password, setPassword, changePassword] = useInput('');
+  const router = useRouter();
 
-  const onFinishFailed = (errorInfo) => {
-    console.log('Failed:', errorInfo);
-  };
+  const onFinish = useCallback(() => {
+    dispatch(login({ email, password }));
+  }, [email, password]);
+
+  useEffect(() => {
+    if (!!me) {
+      router.push('/');
+    }
+  }, [me]); // 후에 ssr 적용
 
   return (
     <SignLayout>
@@ -26,27 +37,33 @@ const Login = () => {
           </Link>
         }
       >
-        <Form>
+        <Form onFinish={onFinish}>
           <Form.Item>
             <Input
+              value={email}
+              onChange={changeEmail}
               size='large'
               name='user-email'
               type='email'
               placeholder='Email'
               prefix={<UserOutlined />}
+              required={true}
             />
           </Form.Item>
           <Form.Item>
             <Input
+              value={password}
+              onChange={changePassword}
               size='large'
               name='user-password'
               type='password'
               placeholder='Password'
               prefix={<LockOutlined />}
+              required={true}
             />
           </Form.Item>
           <Form.Item style={{ textAlign: 'center' }}>
-            <Button type='primary' htmlType='submit'>
+            <Button type='primary' htmlType='submit' loading={loading}>
               Submit
             </Button>
           </Form.Item>
