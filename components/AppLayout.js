@@ -2,6 +2,7 @@ import { useRouter } from 'next/router';
 import React, { useState, useEffect } from 'react';
 import { Menu, Layout } from 'antd';
 import { UserOutlined, MessageOutlined, SettingOutlined } from '@ant-design/icons';
+import { useSelector } from 'react-redux';
 
 const { Sider } = Layout;
 
@@ -12,7 +13,15 @@ const path = {
 };
 
 const AppLayout = ({ children, index }) => {
+  const { me } = useSelector((state) => state.user);
+
   const router = useRouter();
+  useEffect(() => {
+    if (!me) {
+      router.push('/login');
+    }
+  }, []); // 후에 SSR로 변경
+
   const route = (routeIndex) => () => {
     if (Number(index) === routeIndex) {
       return null;
