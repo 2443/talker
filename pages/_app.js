@@ -1,9 +1,8 @@
+import React from 'react';
+import PropTypes from 'prop-types';
 import Head from 'next/head';
 import 'antd/dist/antd.css';
-
-function MyApp({ Component, pageProps }) {
-  return <Component {...pageProps} />;
-}
+import wrapper from '../store/configureStore';
 
 const Talker = ({ Component }) => {
   return (
@@ -17,4 +16,7 @@ const Talker = ({ Component }) => {
   );
 };
 
-export default MyApp;
+Talker.propTypes = {
+  Component: PropTypes.elementType.isRequired,
+};
+export default wrapper.withRedux(Talker);
