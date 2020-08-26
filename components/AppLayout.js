@@ -29,16 +29,15 @@ const AppLayout = ({ children, index }) => {
     router.push(path[routeIndex]);
   };
   return (
-    <Layout style={{ minHeight: '100vh' }}>
+    <Layout style={{ minHeight: '100vh' }} hasSider={true}>
       <Sider collapsed={true}>
-        <div className='logo' />
         <Menu theme='dark' defaultSelectedKeys={[index]} mode='inline'>
           <Menu.Item key='1' icon={<UserOutlined />} onClick={route(1)} />
           <Menu.Item key='2' icon={<MessageOutlined />} onClick={route(2)} />
           <Menu.Item key='3' icon={<SettingOutlined />} onClick={route(3)} />
         </Menu>
       </Sider>
-      {children}
+      <Layout>{children}</Layout>
     </Layout>
   );
 };
