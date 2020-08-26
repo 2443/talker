@@ -1,5 +1,6 @@
 export const initialState = {
   Rooms: [],
+  filteredRooms: [],
   // 공용
   loading: false,
   done: false,
