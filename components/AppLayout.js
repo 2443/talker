@@ -8,7 +8,7 @@ const { Sider } = Layout;
 
 const path = {
   1: '/',
-  2: '/chat',
+  2: '/room',
   3: '/setting',
 };
 
