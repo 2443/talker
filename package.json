@@ -13,6 +13,7 @@
     "@emotion/core": "^10.0.35",
     "@emotion/styled": "^10.0.27",
     "antd": "^4.6.1",
+    "faker": "^5.0.0",
     "next": "^9.5.2",
     "next-redux-wrapper": "^6.0.2",
     "react": "^16.13.1",
@@ -21,7 +22,8 @@
     "redux": "^4.0.5",
     "redux-logger": "^3.0.6",
     "redux-promise-middleware": "^6.1.2",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "shortid": "^2.2.15"
   },
   "devDependencies": {
     "redux-devtools-extension": "^2.13.8"
