@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import SignLayout from '../components/SignLayout';
 import { useEffect, useCallback, useState } from 'react';
 import useInput from '../hooks/useInput';
+import { signup } from '../actions/user';
 
 const Warning = styled.div`
   color: red;
@@ -15,7 +16,7 @@ const Warning = styled.div`
 
 const Login = () => {
   const dispatch = useDispatch();
-  const { me, loading } = useSelector((state) => state.user);
+  const { me, loading, signUpDone } = useSelector((state) => state.user);
   const router = useRouter();
 
   const [email, setEmail, changeEmail] = useInput('');
@@ -47,10 +48,14 @@ const Login = () => {
   const onFinish = useCallback(() => {
     if (password !== passwordCheck) {
       setPasswordError(true);
+      return null;
     }
     if (!term) {
       setTermError(true);
+      return null;
     }
+
+    dispatch(signup({ email, nickname, password }));
   }, [email, nickname, password, passwordCheck, term, termError]);
 
   const onFinishFailed = (errorInfo) => {
@@ -61,7 +66,10 @@ const Login = () => {
     if (!!me) {
       router.push('/');
     }
-  }, [me]); // 후에 ssr 적용
+    if (signUpDone) {
+      router.push('/login');
+    }
+  }, [me, signUpDone]); // 후에 ssr 적용
 
   return (
     <SignLayout>

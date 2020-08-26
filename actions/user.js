@@ -1,9 +1,9 @@
-import { LOGIN_REQUEST, LOGIN_FAILURE, LOGIN_SUCCESS, LOGIN } from '../reducers/user';
+import { LOGIN_REQUEST, LOGIN_FAILURE, LOGIN_SUCCESS, LOGIN, SIGNUP } from '../reducers/user';
 
-function delay(time) {
+function delay(time, data = null) {
   return new Promise((resolve) =>
     setTimeout(() => {
-      resolve(loginDummyData);
+      resolve(data);
     }, time)
   );
 }
@@ -13,4 +13,5 @@ const loginDummyData = {
   id: 1,
 };
 
-export const login = (parameter) => ({ type: LOGIN, payload: delay(1000) });
+export const login = (parameter) => ({ type: LOGIN, payload: delay(1000, loginDummyData) });
+export const signup = (parameter) => ({ type: SIGNUP, payload: delay(1000, loginDummyData) });

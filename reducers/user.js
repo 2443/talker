@@ -5,12 +5,18 @@ export const initialState = {
   done: false,
   error: null,
   //
+  signUpDone: false,
 };
 
 export const LOGIN = 'LOGIN';
 export const LOGIN_REQUEST = 'LOGIN_REQUEST';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGIN_FAILURE = 'LOGIN_FAILURE';
+
+export const SIGNUP = 'SIGNUP';
+export const SIGNUP_REQUEST = 'SIGNUP_REQUEST';
+export const SIGNUP_SUCCESS = 'SIGNUP_SUCCESS';
+export const SIGNUP_FAILURE = 'SIGNUP_FAILURE';
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
@@ -27,6 +33,24 @@ const reducer = (state = initialState, action) => {
         done: true,
       };
     case LOGIN_FAILURE:
+      return {
+        ...state,
+        me: null,
+        loading: false,
+        error: action.payload,
+      };
+    case SIGNUP_REQUEST:
+      return {
+        ...state,
+        loading: true,
+      };
+    case SIGNUP_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        signupDone: true,
+      };
+    case SIGNUP_FAILURE:
       return {
         ...state,
         me: null,
