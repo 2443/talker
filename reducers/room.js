@@ -1,5 +1,13 @@
 export const initialState = {
-  Rooms: [],
+  Rooms: [
+    {
+      id: 'OECTxpByl',
+      lastChatTime: 'Fri Feb 28 2020 12:05:04 GMT+0900 (대한민국 표준시)',
+      lastMessage: 'Qui vero aut totam molestias sunt.',
+      name: 'quo',
+      roomImage: 'https://s3.amazonaws.com/uifaces/faces/twitter/janpalounek/128.jpg',
+    },
+  ],
   filteredRooms: [],
   // 공용
   loading: false,
@@ -24,7 +32,7 @@ const reducer = (state = initialState, action) => {
     case LOAD_ROOMS_SUCCESS:
       return {
         ...state,
-        Rooms: action.payload,
+        Rooms: state.Rooms.concat(action.payload),
         loading: false,
       };
     case LOAD_ROOMS_FAILURE:
