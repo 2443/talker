@@ -9,7 +9,6 @@ const { Search } = Input;
 const SearchBox = ({ placeholder, action, loading }) => {
   const dispatch = useDispatch();
   const [searchKeyword, setSearchKeyword, changeSearchKeyword] = useInput('');
-  console.log(placeholder);
   const onSearch = useCallback(() => {
     dispatch(action(searchKeyword));
   }, [searchKeyword]);

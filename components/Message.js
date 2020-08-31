@@ -41,7 +41,6 @@ const Message = ({ contents, me }) => {
   let lastChattedUser = 0;
   const createView = (elements) => () =>
     elements.map((item) => {
-      console.log('render item');
       if (item.User.id === me.id) {
         lastChattedUser = me.id;
         return (
