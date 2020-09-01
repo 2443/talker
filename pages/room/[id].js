@@ -23,11 +23,13 @@ const ChattingRoom = () => {
   );
 
   useEffect(() => {
-    socket.emit('init', { id, name: me.nickname });
-    socket.on('message', (data) => {
-      setData(data);
-    });
-  }, []);
+    if (id) {
+      socket.emit('init', { id, name: me.nickname });
+      socket.on('message', (data) => {
+        setData(data);
+      });
+    }
+  }, [id]);
 
   if (!id) {
     return null;

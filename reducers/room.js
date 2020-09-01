@@ -7,6 +7,13 @@ export const initialState = {
       name: 'quo',
       roomImage: 'https://s3.amazonaws.com/uifaces/faces/twitter/janpalounek/128.jpg',
     },
+    {
+      id: 'TvF_kvjznO',
+      name: 'Vanessa Beatty DDS',
+      roomImage: 'https://s3.amazonaws.com/uifaces/faces/twitter/ryanjohnson_me/128.jpg',
+      lastMessage: 'Iusto aut dolor dolorem in dicta.',
+      lastChatTime: '2020-05-28T22:52:42.898Z',
+    },
   ],
   filteredRooms: [],
   // 공용

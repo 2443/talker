@@ -60,7 +60,7 @@ const ChattingLayout = ({ data, socket, room, me }) => {
   const onClickSendMessage = useCallback(() => {
     console.log(message);
     if (!!message.trim()) {
-      socket.emit('message', { User: me, content: message });
+      socket.emit('message', { User: me, content: message, roomId: room.id });
       setContents(contents.concat({ User: me, content: message }));
       setMessage('');
       setTimeout(() => {
