@@ -1,13 +1,7 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { Input, Comment, Avatar, PageHeader } from 'antd';
-import { RightOutlined } from '@ant-design/icons';
-import useInput from '../../hooks/useInput';
-import styled from '@emotion/styled';
-import Message from '../../components/Message';
 import { useSelector } from 'react-redux';
 import socketio from 'socket.io-client';
-import Socket from '../../components/Socket';
 import ChattingLayout from '../../components/ChattingLayout';
 
 const socket = socketio.connect('http://localhost:4000', {});

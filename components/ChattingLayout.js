@@ -62,6 +62,9 @@ const ChattingLayout = ({ data, socket, room, me }) => {
     socket.emit('message', { User: me, content: message });
     setContents(contents.concat({ User: me, content: message }));
     setMessage('');
+    setTimeout(() => {
+      window.scrollTo(0, document.body.scrollHeight + 100);
+    }, 50);
   }, [message]);
 
   useEffect(() => {
