@@ -17,46 +17,16 @@ const CustomPageHeader = styled(PageHeader)`
 const ChattingLayout = ({ data, socket, room, me }) => {
   const [message, setMessage, changeMessage] = useInput('');
   const [id, setId] = useState(10);
-  const [contents, setContents] = useState([
-    { id: 1, content: '첫 메시지입니당', date: '2020-01-01...', User: { id: 1, nickname: '1번' } },
-    {
-      id: 2,
-      content: '두번째 메시지입니당',
-      date: '2020-01-01...',
-      User: { id: 1, nickname: '1번' },
-    },
-    { id: 3, content: '세번째 메시지입니당', date: '2020-01-01...', User: { id: me.id } },
-    {
-      id: 4,
-      content: '네번째 메시지입니당',
-      date: '2020-01-01...',
-      User: { id: 2, nickname: '2번' },
-    },
-    {
-      id: 5,
-      content: '네번째 메시지입니당',
-      date: '2020-01-01...',
-      User: { id: 2, nickname: '2번' },
-    },
-    {
-      id: 6,
-      content: '다섯번째 메시지입니당',
-      date: '2020-01-01...',
-      User: { id: 2, nickname: '2번' },
-    },
-    {
-      id: 7,
-      content: '여섯번째 메시지입니당',
-      date: '2020-01-01...',
-      User: { id: 3, nickname: '3번' },
-    },
-    {
-      id: 8,
-      content: '일곱번째 메시지입니당',
-      date: '2020-01-01...',
-      User: { id: 4, nickname: '개인주의' },
-    },
-  ]);
+  const [contents, setContents] = useState(() => {
+    try {
+      const item = window.localStorage.getItem(room.id);
+      return item ? JSON.parse(item) : [];
+    } catch (error) {
+      console.error(error);
+      return [];
+    }
+  });
+
   const onClickSendMessage = useCallback(() => {
     console.log(message);
     if (!!message.trim()) {
@@ -75,6 +45,10 @@ const ChattingLayout = ({ data, socket, room, me }) => {
       setContents(contents.concat(data));
     }
   }, [data]);
+
+  useEffect(() => {
+    window.localStorage.setItem(room.id, JSON.stringify(contents));
+  }, [contents]);
 
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#7FDBFF' }}>
