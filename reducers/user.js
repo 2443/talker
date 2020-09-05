@@ -1,6 +1,7 @@
 import { createDummyUser } from '../actions/user';
 export const initialState = {
-  me: createDummyUser(),
+  // me: createDummyUser(),
+  me: null,
   Users: [],
   filteredUsers: [],
   // 공용
@@ -8,7 +9,7 @@ export const initialState = {
   done: false,
   error: null,
   //
-  signUpDone: false,
+  signupDone: false,
 };
 
 export const LOGIN = 'LOGIN';
@@ -27,20 +28,28 @@ export const LOAD_USERS_REQUEST = 'LOAD_USERS_REQUEST';
 export const LOAD_USERS_SUCCESS = 'LOAD_USERS_SUCCESS';
 export const LOAD_USERS_FAILURE = 'LOAD_USERS_FAILURE';
 
+export const LOAD_MY_DATA = 'LOAD_MY_DATA';
+export const LOAD_MY_DATA_REQUEST = 'LOAD_MY_DATA_REQUEST';
+export const LOAD_MY_DATA_SUCCESS = 'LOAD_MY_DATA_SUCCESS';
+export const LOAD_MY_DATA_FAILURE = 'LOAD_MY_DATA_FAILURE';
+
 const reducer = (state = initialState, action) => {
   switch (action.type) {
+    case LOAD_MY_DATA_REQUEST:
     case LOGIN_REQUEST:
       return {
         ...state,
         loading: true,
       };
+    case LOAD_MY_DATA_SUCCESS:
     case LOGIN_SUCCESS:
       return {
         ...state,
-        me: action.payload,
+        me: action.payload.data,
         loading: false,
         done: true,
       };
+    case LOAD_MY_DATA_FAILURE:
     case LOGIN_FAILURE:
       return {
         ...state,
@@ -56,8 +65,8 @@ const reducer = (state = initialState, action) => {
     case SIGNUP_SUCCESS:
       return {
         ...state,
-        loading: false,
         signupDone: true,
+        loading: false,
       };
     case SIGNUP_FAILURE:
       return {

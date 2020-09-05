@@ -26,7 +26,7 @@ const Home = () => {
           header={
             <List.Item>
               <List.Item.Meta
-                avatar={<Avatar src={me.profileImage} />}
+                avatar={<Avatar src={me.profileImage}>{me.nickname[0].toUpperCase()}</Avatar>}
                 title={me.nickname}
                 description={me.statusMessage}
                 style={{ margin: '10px' }}
@@ -39,7 +39,7 @@ const Home = () => {
           renderItem={(item) => (
             <List.Item style={border}>
               <List.Item.Meta
-                avatar={<Avatar src={item.profileImage} />}
+                avatar={<Avatar src={item.profileImage}>{item.nickname[0].toUpperCase()}</Avatar>}
                 title={item.nickname}
                 description={item.statusMessage}
                 style={{ margin: '10px' }}
@@ -51,5 +51,3 @@ const Home = () => {
     </>
   );
 };
-
-export default Home;

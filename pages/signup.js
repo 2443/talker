@@ -16,7 +16,7 @@ const Warning = styled.div`
 
 const Login = () => {
   const dispatch = useDispatch();
-  const { me, loading, signUpDone } = useSelector((state) => state.user);
+  const { me, loading, signupDone } = useSelector((state) => state.user);
   const router = useRouter();
 
   const [email, setEmail, changeEmail] = useInput('');
@@ -66,10 +66,10 @@ const Login = () => {
     if (!!me) {
       router.push('/');
     }
-    if (signUpDone) {
+    if (signupDone) {
       router.push('/login');
     }
-  }, [me, signUpDone]); // 후에 ssr 적용
+  }, [me, signupDone]); // 후에 ssr 적용
 
   return (
     <SignLayout>

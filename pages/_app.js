@@ -3,7 +3,9 @@ import PropTypes from 'prop-types';
 import Head from 'next/head';
 import 'antd/dist/antd.css';
 import wrapper from '../store/configureStore';
+import axios from 'axios';
 
+axios.defaults.baseURL = 'http://localhost:4000';
 const Talker = ({ Component }) => {
   return (
     <>
