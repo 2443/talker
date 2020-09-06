@@ -7,34 +7,19 @@ import { useSelector } from 'react-redux';
 const { Sider } = Layout;
 
 const path = {
-  1: '/',
-  2: '/room',
-  3: '/setting',
+  main: '1',
+  rooms: '2',
+  setting: '3',
 };
 
-const AppLayout = ({ children, index }) => {
-  const { me } = useSelector((state) => state.user);
-
-  const router = useRouter();
-  useEffect(() => {
-    if (!me) {
-      router.push('/login');
-    }
-  }, []); // 후에 SSR로 변경
-
-  const route = (routeIndex) => () => {
-    if (Number(index) === routeIndex) {
-      return null;
-    }
-    router.push(path[routeIndex]);
-  };
+const AppLayout = ({ children, index, page, setPage }) => {
   return (
     <Layout style={{ minHeight: '100vh' }} hasSider={true}>
       <Sider collapsed={true}>
-        <Menu theme='dark' defaultSelectedKeys={[index]} mode='inline'>
-          <Menu.Item key='1' icon={<UserOutlined />} onClick={route(1)} />
-          <Menu.Item key='2' icon={<MessageOutlined />} onClick={route(2)} />
-          <Menu.Item key='3' icon={<SettingOutlined />} onClick={route(3)} />
+        <Menu theme='dark' defaultSelectedKeys={[path[page]]} mode='inline'>
+          <Menu.Item key='1' icon={<UserOutlined />} onClick={() => setPage('main')} />
+          <Menu.Item key='2' icon={<MessageOutlined />} onClick={() => setPage('rooms')} />
+          <Menu.Item key='3' icon={<SettingOutlined />} onClick={() => setPage('setting')} />
         </Menu>
       </Sider>
       <Layout>{children}</Layout>

@@ -92,7 +92,6 @@ const reducer = (state = initialState, action) => {
           }
         }),
         loading: false,
-        signupDone: true,
       };
     case LOAD_USERS_FAILURE:
       return {

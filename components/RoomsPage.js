@@ -18,7 +18,7 @@ const Room = () => {
   }, []);
 
   return (
-    <AppLayout index='2'>
+    <>
       <SearchBox action={filterRooms} />
       <List
         size='large'
@@ -39,7 +39,7 @@ const Room = () => {
           </Link>
         )}
       ></List>
-    </AppLayout>
+    </>
   );
 };
 
