@@ -1,29 +1,19 @@
-import Head from 'next/head';
-import AppLayout from '../components/AppLayout';
-import { Input } from 'antd';
+import { Button, List, Avatar, Modal, Badge } from 'antd';
 import SearchBox from '../components/SearchBox';
-import { List, Avatar } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
-import { useEffect } from 'react';
-import { loadUsers, filterUsers, loadMydata } from '../actions/user';
-import wrapper from '../store/configureStore';
-import { useRouter } from 'next/router';
-import Axios from 'axios';
-
-const { Search } = Input;
+import { filterUsers } from '../actions/user';
+import { PlusOutlined } from '@ant-design/icons';
+import { useState } from 'react';
 
 const border = { borderBottom: '1px solid lightgray' };
 const Home = ({ me }) => {
   const dispatch = useDispatch();
-  const router = useRouter();
   const { Users, filteredUsers } = useSelector((state) => state.user);
+  const [modalVisible, setModalVisible] = useState(false);
 
-  useEffect(() => {
-    if (!me) {
-      router.push('/login');
-    }
-  }, [me]); // 후에 SSR로 변경
-
+  const controlModalVisible = (yn) => () => {
+    setModalVisible(yn);
+  };
   return (
     <>
       <SearchBox placeholder={`친구 (${Users.length})`} action={filterUsers} />
@@ -52,6 +42,18 @@ const Home = ({ me }) => {
           </List.Item>
         )}
       ></List>
+      <div style={{ position: 'fixed', bottom: 20, right: 20 }}>
+        <Badge count={5}>
+          <Avatar shape='square' icon={<PlusOutlined />} onClick={controlModalVisible(true)} />
+          <Modal
+            title='친구 추가'
+            visible={modalVisible}
+            footer={[]}
+            onCancel={controlModalVisible(false)}
+            onOk={controlModalVisible(false)}
+          ></Modal>
+        </Badge>
+      </div>
     </>
   );
 };
