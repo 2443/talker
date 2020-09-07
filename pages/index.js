@@ -20,7 +20,7 @@ const Home = () => {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const { Users, me, filteredUsers } = useSelector((state) => state.user);
+  const { me } = useSelector((state) => state.user);
 
   const [page, setPage] = useState('main');
 
@@ -30,10 +30,14 @@ const Home = () => {
     }
   }, [me]); // 후에 SSR로 변경
 
+  if (!me) {
+    return null;
+  }
+
   return (
     <AppLayout page={page} setPage={setPage} index='1' me={me}>
       {page === 'main' && <IndexPage me={me} />}
-      {page === 'rooms' && <RoomsPage me={me} />}
+      {page === 'rooms' && <RoomsPage />}
       {page === 'setting' && <SettingPage me={me} />}
     </AppLayout>
   );
