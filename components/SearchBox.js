@@ -13,7 +13,7 @@ const SearchBox = ({ placeholder, action, loading }) => {
     dispatch(action(searchKeyword));
   }, [searchKeyword]);
   return (
-    <div style={{ margin: '10px' }}>
+    <div>
       <Search
         placeholder={placeholder}
         value={searchKeyword}

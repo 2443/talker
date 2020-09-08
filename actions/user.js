@@ -1,4 +1,13 @@
-import { LOGIN, SIGNUP, LOAD_USERS, FILTER_USERS, LOAD_MY_DATA } from '../reducers/user';
+import {
+  LOGIN,
+  SIGNUP,
+  LOAD_USERS,
+  FILTER_USERS,
+  LOAD_MY_DATA,
+  LOAD_USER,
+  REQUEST_ADD_FRIEND,
+  RESPONSE_ADD_FRIEND,
+} from '../reducers/user';
 import faker from 'faker';
 import shortId from 'shortid';
 import axios from 'axios';
@@ -32,7 +41,7 @@ const signupAPI = (data) => {
 
 const loginAPI = (data) => {
   try {
-    return axios.post('http://localhost:4000/login', data);
+    return axios.post('/login', data);
   } catch (error) {
     return null;
   }
@@ -40,7 +49,39 @@ const loginAPI = (data) => {
 
 const loadMyDataAPI = (data) => {
   try {
-    return axios.get('http://localhost:4000/user', data);
+    return axios.get('/user', data);
+  } catch (error) {
+    return null;
+  }
+};
+
+const loadUsersAPI = (data) => {
+  try {
+    return axios.get('/users');
+  } catch (error) {
+    return null;
+  }
+};
+const loadUserAPI = (data) => {
+  try {
+    return axios.get(`/user/${data}`);
+  } catch (error) {
+    return null;
+  }
+};
+
+const requestAddFriendAPI = (data) => {
+  try {
+    return axios.post(`/user/friend/${data}`);
+  } catch (error) {
+    return null;
+  }
+};
+
+const responseAddFriendAPI = (data) => {
+  try {
+    const { id, state } = data;
+    return axios.patch(`/user/friend/${id}`, { state });
   } catch (error) {
     return null;
   }
@@ -50,7 +91,11 @@ export const login = (parameter) => ({ type: LOGIN, payload: loginAPI(parameter)
 export const signup = (parameter) => ({ type: SIGNUP, payload: signupAPI(parameter) });
 export const loadUsers = (parameter) => ({
   type: LOAD_USERS,
-  payload: delay(1000, usersDummyData),
+  payload: loadUsersAPI(),
+});
+export const loadUser = (parameter) => ({
+  type: LOAD_USER,
+  payload: loadUserAPI(parameter),
 });
 export const loadMydata = (parameter) => ({
   type: LOAD_MY_DATA,
@@ -59,4 +104,12 @@ export const loadMydata = (parameter) => ({
 export const filterUsers = (parameter) => ({
   type: FILTER_USERS,
   payload: parameter,
+});
+export const requestAddFriend = (parameter) => ({
+  type: REQUEST_ADD_FRIEND,
+  payload: requestAddFriendAPI(parameter),
+});
+export const responseAddFriend = (parameter) => ({
+  type: RESPONSE_ADD_FRIEND,
+  payload: responseAddFriendAPI(parameter),
 });

@@ -3,13 +3,18 @@ export const initialState = {
   // me: createDummyUser(),
   me: null,
   Users: [],
+  searchedUser: null,
   filteredUsers: [],
   // 공용
   loading: false,
   done: false,
   error: null,
   //
+
   signupDone: false,
+  loadUserLoading: false,
+  loadUserDone: false,
+  loadUserError: null,
 };
 
 export const LOGIN = 'LOGIN';
@@ -28,10 +33,25 @@ export const LOAD_USERS_REQUEST = 'LOAD_USERS_REQUEST';
 export const LOAD_USERS_SUCCESS = 'LOAD_USERS_SUCCESS';
 export const LOAD_USERS_FAILURE = 'LOAD_USERS_FAILURE';
 
+export const LOAD_USER = 'LOAD_USER';
+export const LOAD_USER_REQUEST = 'LOAD_USER_REQUEST';
+export const LOAD_USER_SUCCESS = 'LOAD_USER_SUCCESS';
+export const LOAD_USER_FAILURE = 'LOAD_USER_FAILURE';
+
 export const LOAD_MY_DATA = 'LOAD_MY_DATA';
 export const LOAD_MY_DATA_REQUEST = 'LOAD_MY_DATA_REQUEST';
 export const LOAD_MY_DATA_SUCCESS = 'LOAD_MY_DATA_SUCCESS';
 export const LOAD_MY_DATA_FAILURE = 'LOAD_MY_DATA_FAILURE';
+
+export const REQUEST_ADD_FRIEND = 'REQUEST_ADD_FRIEND';
+export const REQUEST_ADD_FRIEND_REQUEST = 'REQUEST_ADD_FRIEND_REQUEST';
+export const REQUEST_ADD_FRIEND_SUCCESS = 'REQUEST_ADD_FRIEND_SUCCESS';
+export const REQUEST_ADD_FRIEND_FAILURE = 'REQUEST_ADD_FRIEND_FAILURE';
+
+export const RESPONSE_ADD_FRIEND = 'RESPONSE_ADD_FRIEND';
+export const RESPONSE_ADD_FRIEND_REQUEST = 'RESPONSE_ADD_FRIEND_REQUEST';
+export const RESPONSE_ADD_FRIEND_SUCCESS = 'RESPONSE_ADD_FRIEND_SUCCESS';
+export const RESPONSE_ADD_FRIEND_FAILURE = 'RESPONSE_ADD_FRIEND_FAILURE';
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
@@ -76,34 +96,97 @@ const reducer = (state = initialState, action) => {
         error: action.payload,
       };
     case LOAD_USERS_REQUEST:
+    case LOAD_USER_REQUEST:
       return {
         ...state,
-        loading: true,
+        loadUserLoading: true,
+        loadUserDone: false,
+        loadUserError: null,
       };
     case LOAD_USERS_SUCCESS:
       return {
         ...state,
-        Users: action.payload.sort((a, b) => {
-          if (a.nickname < b.nickname) {
-            return -1;
-          }
-          if (a.nickname > b.nickname) {
-            return 1;
-          }
-        }),
-        loading: false,
+        Users: action.payload.data,
+        loadUserLoading: false,
+        loadUserDone: true,
+      };
+    case LOAD_USER_SUCCESS:
+      const searchedUser = action.payload.data;
+      return {
+        ...state,
+        searchedUser: state.Users.find((e) => e.id === searchedUser.id) ? null : searchedUser,
+        loadUserLoading: false,
+        loadUserError: null,
       };
     case LOAD_USERS_FAILURE:
+    case LOAD_USER_FAILURE:
       return {
         ...state,
         loading: false,
         error: action.payload,
       };
+
     case FILTER_USERS:
       const keyword = action.payload.toLowerCase().trim();
       return {
         ...state,
         filteredUsers: state.Users.filter((user) => user.nickname.toLowerCase().includes(keyword)),
+      };
+    case REQUEST_ADD_FRIEND_REQUEST:
+      return {
+        ...state,
+        loading: true,
+      };
+    case REQUEST_ADD_FRIEND_SUCCESS:
+      return {
+        ...state,
+        Users: state.Users.concat({ ...state.searchedUser, state: 'send' }),
+        searchedUser: null,
+        loading: false,
+      };
+    case REQUEST_ADD_FRIEND_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+    case RESPONSE_ADD_FRIEND_REQUEST:
+      return {
+        ...state,
+        loading: true,
+      };
+    case RESPONSE_ADD_FRIEND_SUCCESS: {
+      const { id, state: responseState } = action.payload.data;
+      const idToNumber = parseInt(id, 10);
+
+      if (responseState === 'reject') {
+        return {
+          ...state,
+          Users: state.Users.filter((user) => user.id !== idToNumber),
+          searchedUser: null,
+          loading: false,
+        };
+      }
+
+      const newUsers = state.Users.map((user) => {
+        if (user.id !== idToNumber) {
+          return user;
+        }
+        return { ...user, state: responseState === 'block' ? responseState : 'friend' };
+      });
+
+      return {
+        ...state,
+        Users: newUsers,
+        searchedUser: null,
+        loading: false,
+      };
+    }
+    case RESPONSE_ADD_FRIEND_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
       };
     default:
       return state;
