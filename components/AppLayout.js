@@ -15,14 +15,14 @@ const path = {
 const AppLayout = ({ children, index, page, setPage }) => {
   return (
     <Layout style={{ minHeight: '100vh' }} hasSider={true}>
-      <Sider collapsed={true}>
+      <Sider collapsed={true} style={{ position: 'fixed', height: '100%' }}>
         <Menu theme='dark' defaultSelectedKeys={[path[page]]} mode='inline'>
           <Menu.Item key='1' icon={<UserOutlined />} onClick={() => setPage('main')} />
           <Menu.Item key='2' icon={<MessageOutlined />} onClick={() => setPage('rooms')} />
           <Menu.Item key='3' icon={<SettingOutlined />} onClick={() => setPage('setting')} />
         </Menu>
       </Sider>
-      <Layout>{children}</Layout>
+      <Layout style={{ marginLeft: 80 }}>{children}</Layout>
     </Layout>
   );
 };
