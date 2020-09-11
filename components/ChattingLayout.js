@@ -14,23 +14,16 @@ const CustomPageHeader = styled(PageHeader)`
   z-index: 9999;
 `;
 
-const ChattingLayout = ({ data, socket, room, me }) => {
+const ChattingLayout = ({ data, socket, chattingRoom, me }) => {
   const [message, setMessage, changeMessage] = useInput('');
   const [id, setId] = useState(10);
-  const [contents, setContents] = useState(() => {
-    try {
-      const item = window.localStorage.getItem(room.id);
-      return item ? JSON.parse(item) : [];
-    } catch (error) {
-      console.error(error);
-      return [];
-    }
-  });
+  const { Users } = chattingRoom;
+  const [contents, setContents] = useState([]);
 
   const onClickSendMessage = useCallback(() => {
     console.log(message);
     if (!!message.trim()) {
-      socket.emit('message', { User: me, content: message, roomId: room.id });
+      socket.emit('message', { User: me, content: message, roomId: chattingRoom.id });
       setContents(contents.concat({ User: me, content: message }));
       setMessage('');
       setTimeout(() => {
@@ -40,6 +33,12 @@ const ChattingLayout = ({ data, socket, room, me }) => {
   }, [message]);
 
   useEffect(() => {
+    const item = window.localStorage.getItem(chattingRoom.id);
+    console.log('item', item);
+    setContents(item ? JSON.parse(item) : []);
+  }, []);
+
+  useEffect(() => {
     if (!!data) {
       console.log(data);
       setContents(contents.concat(data));
@@ -47,12 +46,12 @@ const ChattingLayout = ({ data, socket, room, me }) => {
   }, [data]);
 
   useEffect(() => {
-    window.localStorage.setItem(room.id, JSON.stringify(contents));
+    window.localStorage.setItem(chattingRoom.id, JSON.stringify(contents));
   }, [contents]);
 
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#7FDBFF' }}>
-      <CustomPageHeader title={room.name} avatar={{ src: room.roomImage }} />
+      <CustomPageHeader title={chattingRoom.name} avatar={{ src: chattingRoom.roomImage }} />
       <div style={{ height: '70px' }}>해더 공백 블럭</div>
 
       <div style={{ paddingTop: '10px' }}>
