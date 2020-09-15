@@ -11,6 +11,14 @@ function delay(time, data = null) {
   );
 }
 
+const loadRoomsAPI = () => {
+  try {
+    return axios.get('/rooms');
+  } catch (error) {
+    return null;
+  }
+};
+
 const loadRoomAPI = (data) => {
   try {
     return axios.get(`/room/${data}`);
@@ -39,9 +47,9 @@ const roomsDummyData = Array(10)
   .fill()
   .map(() => createDummyRoom());
 
-export const loadRooms = (parameter) => ({
+export const loadRooms = () => ({
   type: LOAD_ROOMS,
-  payload: delay(1000, roomsDummyData),
+  payload: loadRoomsAPI(),
 });
 export const loadRoom = (parameter) => ({
   type: LOAD_ROOM,
