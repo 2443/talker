@@ -3,7 +3,9 @@ import AppLayout from '../components/AppLayout';
 import { Form, Input, InputNumber, Button, Avatar, Space } from 'antd';
 import { useCallback, useRef } from 'react';
 import useInput from '../hooks/useInput';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { userImageUpload, userUpdate } from '../actions/user';
+import { REMOVE_IMAGE } from '../reducers/user';
 
 const layout = {
   labelCol: { span: 4 },
@@ -15,27 +17,34 @@ const validateMessages = {
 };
 
 const Setting = () => {
-  const { me } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const { me, loading } = useSelector((state) => state.user);
   const [nickname, setnickname, changeNickname] = useInput(me.nickname);
   const [statusMessage, setStatusMessage, changeStatusMessage] = useInput(me.statusMessage);
-  const [profileImage, setProfileImage] = useInput(me.profileImage);
+  const { profileImage } = me;
   const imageInput = useRef();
 
   const onClickImageUpload = useCallback(() => {
     imageInput.current.click();
   }, [imageInput.current]);
 
-  const onChangeImages = useCallback(() => {
-    alert('미구현');
-  }, []);
+  const onChangeImages = useCallback((e) => {
+    const imageFormData = new FormData();
+    [].forEach.call(e.target.files, (f) => {
+      imageFormData.append('image', f);
+    });
+    dispatch(userImageUpload(imageFormData));
+  });
 
   const onClickImageRemove = useCallback(() => {
-    setProfileImage('');
-  }, []);
+    dispatch({
+      type: REMOVE_IMAGE,
+    });
+  });
 
-  const onFinish = (values) => {
-    console.log(values);
-  };
+  const onFinish = useCallback(() => {
+    dispatch(userUpdate({ profileImage, nickname, statusMessage }));
+  }, [profileImage, nickname, statusMessage]);
 
   return (
     <Form
@@ -48,7 +57,7 @@ const Setting = () => {
     >
       <Form.Item label='프로필'>
         <Space>
-          <Avatar src={profileImage} size='large'>
+          <Avatar src={profileImage?.replace(/\/thumb\//, '/original/')} size='large'>
             {me.nickname[0].toUpperCase()}
           </Avatar>
           <input type='file' hidden name='image' ref={imageInput} onChange={onChangeImages} />
@@ -67,7 +76,7 @@ const Setting = () => {
         <Input.TextArea value={statusMessage} onChange={changeStatusMessage} />
       </Form.Item>
       <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 10 }}>
-        <Button type='primary' htmlType='submit'>
+        <Button type='primary' htmlType='submit' loading={loading}>
           저장
         </Button>
       </Form.Item>

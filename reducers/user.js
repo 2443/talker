@@ -53,6 +53,18 @@ export const RESPONSE_ADD_FRIEND_REQUEST = 'RESPONSE_ADD_FRIEND_REQUEST';
 export const RESPONSE_ADD_FRIEND_SUCCESS = 'RESPONSE_ADD_FRIEND_SUCCESS';
 export const RESPONSE_ADD_FRIEND_FAILURE = 'RESPONSE_ADD_FRIEND_FAILURE';
 
+export const USER_UPDATE = 'USER_UPDATE';
+export const USER_UPDATE_REQUEST = 'USER_UPDATE_REQUEST';
+export const USER_UPDATE_SUCCESS = 'USER_UPDATE_SUCCESS';
+export const USER_UPDATE_FAILURE = 'USER_UPDATE_FAILURE';
+
+export const USER_IMAGE_UPLOAD = 'USER_IMAGE_UPLOAD';
+export const USER_IMAGE_UPLOAD_REQUEST = 'USER_IMAGE_UPLOAD_REQUEST';
+export const USER_IMAGE_UPLOAD_SUCCESS = 'USER_IMAGE_UPLOAD_SUCCESS';
+export const USER_IMAGE_UPLOAD_FAILURE = 'USER_IMAGE_UPLOAD_FAILURE';
+
+export const REMOVE_IMAGE = 'REMOVE_IMAGE';
+
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case LOAD_MY_DATA_REQUEST:
@@ -187,6 +199,45 @@ const reducer = (state = initialState, action) => {
         ...state,
         loading: false,
         error: action.payload,
+      };
+    case USER_UPDATE_REQUEST:
+      return {
+        ...state,
+        loading: true,
+      };
+    case USER_UPDATE_SUCCESS:
+      return {
+        ...state,
+        me: { ...state.me, ...action.payload.data },
+        loading: false,
+      };
+    case USER_UPDATE_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+    case USER_IMAGE_UPLOAD_REQUEST:
+      return {
+        ...state,
+        loading: true,
+      };
+    case USER_IMAGE_UPLOAD_SUCCESS:
+      return {
+        ...state,
+        me: { ...state.me, profileImage: action.payload.data },
+        loading: false,
+      };
+    case USER_IMAGE_UPLOAD_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+    case REMOVE_IMAGE:
+      return {
+        ...state,
+        me: { ...state.me, profileImage: null },
       };
     default:
       return state;
