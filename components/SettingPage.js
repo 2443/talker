@@ -4,7 +4,7 @@ import { Form, Input, InputNumber, Button, Avatar, Space } from 'antd';
 import { useCallback, useRef } from 'react';
 import useInput from '../hooks/useInput';
 import { useDispatch, useSelector } from 'react-redux';
-import { userImageUpload, userUpdate } from '../actions/user';
+import { uploadUserImage, updateUser } from '../actions/user';
 import { REMOVE_IMAGE } from '../reducers/user';
 
 const layout = {
@@ -33,7 +33,7 @@ const Setting = () => {
     [].forEach.call(e.target.files, (f) => {
       imageFormData.append('image', f);
     });
-    dispatch(userImageUpload(imageFormData));
+    dispatch(uploadUserImage(imageFormData));
   });
 
   const onClickImageRemove = useCallback(() => {
@@ -43,7 +43,7 @@ const Setting = () => {
   });
 
   const onFinish = useCallback(() => {
-    dispatch(userUpdate({ profileImage, nickname, statusMessage }));
+    dispatch(updateUser({ profileImage, nickname, statusMessage }));
   }, [profileImage, nickname, statusMessage]);
 
   return (

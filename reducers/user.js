@@ -53,15 +53,15 @@ export const RESPONSE_ADD_FRIEND_REQUEST = 'RESPONSE_ADD_FRIEND_REQUEST';
 export const RESPONSE_ADD_FRIEND_SUCCESS = 'RESPONSE_ADD_FRIEND_SUCCESS';
 export const RESPONSE_ADD_FRIEND_FAILURE = 'RESPONSE_ADD_FRIEND_FAILURE';
 
-export const USER_UPDATE = 'USER_UPDATE';
-export const USER_UPDATE_REQUEST = 'USER_UPDATE_REQUEST';
-export const USER_UPDATE_SUCCESS = 'USER_UPDATE_SUCCESS';
-export const USER_UPDATE_FAILURE = 'USER_UPDATE_FAILURE';
+export const UPDATE_USER = 'UPDATE_USER';
+export const UPDATE_USER_REQUEST = 'UPDATE_USER_REQUEST';
+export const UPDATE_USER_SUCCESS = 'UPDATE_USER_SUCCESS';
+export const UPDATE_USER_FAILURE = 'UPDATE_USER_FAILURE';
 
-export const USER_IMAGE_UPLOAD = 'USER_IMAGE_UPLOAD';
-export const USER_IMAGE_UPLOAD_REQUEST = 'USER_IMAGE_UPLOAD_REQUEST';
-export const USER_IMAGE_UPLOAD_SUCCESS = 'USER_IMAGE_UPLOAD_SUCCESS';
-export const USER_IMAGE_UPLOAD_FAILURE = 'USER_IMAGE_UPLOAD_FAILURE';
+export const UPLOAD_USER_IMAGE = 'UPLOAD_USER_IMAGE';
+export const UPLOAD_USER_IMAGE_REQUEST = 'UPLOAD_USER_IMAGE_REQUEST';
+export const UPLOAD_USER_IMAGE_SUCCESS = 'UPLOAD_USER_IMAGE_SUCCESS';
+export const UPLOAD_USER_IMAGE_FAILURE = 'UPLOAD_USER_IMAGE_FAILURE';
 
 export const REMOVE_IMAGE = 'REMOVE_IMAGE';
 
@@ -200,35 +200,35 @@ const reducer = (state = initialState, action) => {
         loading: false,
         error: action.payload,
       };
-    case USER_UPDATE_REQUEST:
+    case UPDATE_USER_REQUEST:
       return {
         ...state,
         loading: true,
       };
-    case USER_UPDATE_SUCCESS:
+    case UPDATE_USER_SUCCESS:
       return {
         ...state,
         me: { ...state.me, ...action.payload.data },
         loading: false,
       };
-    case USER_UPDATE_FAILURE:
+    case UPDATE_USER_FAILURE:
       return {
         ...state,
         loading: false,
         error: action.payload,
       };
-    case USER_IMAGE_UPLOAD_REQUEST:
+    case UPLOAD_USER_IMAGE_REQUEST:
       return {
         ...state,
         loading: true,
       };
-    case USER_IMAGE_UPLOAD_SUCCESS:
+    case UPLOAD_USER_IMAGE_SUCCESS:
       return {
         ...state,
         me: { ...state.me, profileImage: action.payload.data },
         loading: false,
       };
-    case USER_IMAGE_UPLOAD_FAILURE:
+    case UPLOAD_USER_IMAGE_FAILURE:
       return {
         ...state,
         loading: false,

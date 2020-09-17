@@ -7,8 +7,8 @@ import {
   LOAD_USER,
   REQUEST_ADD_FRIEND,
   RESPONSE_ADD_FRIEND,
-  USER_UPDATE,
-  USER_IMAGE_UPLOAD,
+  UPDATE_USER,
+  UPLOAD_USER_IMAGE,
 } from '../reducers/user';
 import faker from 'faker';
 import shortId from 'shortid';
@@ -89,7 +89,7 @@ const responseAddFriendAPI = (data) => {
   }
 };
 
-const userUpdateAPI = (data) => {
+const updateUserAPI = (data) => {
   try {
     return axios.put('/user', data);
   } catch (error) {
@@ -97,7 +97,7 @@ const userUpdateAPI = (data) => {
   }
 };
 
-const userImageUploadAPI = (data) => {
+const uploadUserImageAPI = (data) => {
   try {
     return axios.post('/user/image', data);
   } catch (error) {
@@ -131,11 +131,11 @@ export const responseAddFriend = (parameter) => ({
   type: RESPONSE_ADD_FRIEND,
   payload: responseAddFriendAPI(parameter),
 });
-export const userUpdate = (parameter) => ({
-  type: USER_UPDATE,
-  payload: userUpdateAPI(parameter),
+export const updateUser = (parameter) => ({
+  type: UPDATE_USER,
+  payload: updateUserAPI(parameter),
 });
-export const userImageUpload = (parameter) => ({
-  type: USER_IMAGE_UPLOAD,
-  payload: userImageUploadAPI(parameter),
+export const uploadUserImage = (parameter) => ({
+  type: UPLOAD_USER_IMAGE,
+  payload: uploadUserImageAPI(parameter),
 });
