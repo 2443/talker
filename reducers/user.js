@@ -63,7 +63,7 @@ export const UPLOAD_USER_IMAGE_REQUEST = 'UPLOAD_USER_IMAGE_REQUEST';
 export const UPLOAD_USER_IMAGE_SUCCESS = 'UPLOAD_USER_IMAGE_SUCCESS';
 export const UPLOAD_USER_IMAGE_FAILURE = 'UPLOAD_USER_IMAGE_FAILURE';
 
-export const REMOVE_IMAGE = 'REMOVE_IMAGE';
+export const REMOVE_USER_IMAGE = 'REMOVE_USER_IMAGE';
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
@@ -234,7 +234,7 @@ const reducer = (state = initialState, action) => {
         loading: false,
         error: action.payload,
       };
-    case REMOVE_IMAGE:
+    case REMOVE_USER_IMAGE:
       return {
         ...state,
         me: { ...state.me, profileImage: null },

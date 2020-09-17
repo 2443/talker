@@ -5,7 +5,7 @@ import { useCallback, useRef } from 'react';
 import useInput from '../hooks/useInput';
 import { useDispatch, useSelector } from 'react-redux';
 import { uploadUserImage, updateUser } from '../actions/user';
-import { REMOVE_IMAGE } from '../reducers/user';
+import { REMOVE_USER_IMAGE } from '../reducers/user';
 
 const layout = {
   labelCol: { span: 4 },
@@ -38,7 +38,7 @@ const Setting = () => {
 
   const onClickImageRemove = useCallback(() => {
     dispatch({
-      type: REMOVE_IMAGE,
+      type: REMOVE_USER_IMAGE,
     });
   });
 
