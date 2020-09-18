@@ -4,9 +4,11 @@ import { RightOutlined, SettingOutlined } from '@ant-design/icons';
 import styled from '@emotion/styled';
 import Message from './Message';
 import useInput from '../hooks/useInput';
+import { sendImagesAPI } from '../actions/chat';
 import { updateRoom, uploadRoomImage } from '../actions/room';
 import { useDispatch } from 'react-redux';
 import { REMOVE_ROOM_IMAGE } from '../reducers/room';
+import FileUploadWraaper from './FileUploadWraaper';
 
 const { Search } = Input;
 
@@ -38,6 +40,7 @@ const ChattingLayout = ({ data, socket, chattingRoom, me }) => {
   }, [imageInput.current]);
 
   const onChangeImages = useCallback((e) => {
+    console.log(e.target.files);
     const imageFormData = new FormData();
     [].forEach.call(e.target.files, (f) => {
       imageFormData.append('image', f);
@@ -58,8 +61,8 @@ const ChattingLayout = ({ data, socket, chattingRoom, me }) => {
   const onClickSendMessage = useCallback(() => {
     console.log(message);
     if (!!message.trim()) {
-      socket.emit('message', { User: me, content: message, roomId: chattingRoom.id });
-      setContents(contents.concat({ User: me, content: message }));
+      socket.emit('message', { userId: me.id, content: message, roomId: chattingRoom.id });
+      setContents(contents.concat({ userId: me.id, content: message }));
       setMessage('');
       setTimeout(() => {
         window.scrollTo(0, document.body.scrollHeight + 100);
@@ -73,6 +76,21 @@ const ChattingLayout = ({ data, socket, chattingRoom, me }) => {
     );
     setModalVisible(false);
   }, [chattingRoom.roomImage, inputName]);
+
+  const onUpload = useCallback(async (e) => {
+    const imageFormData = new FormData();
+    [].forEach.call(e, (f) => {
+      imageFormData.append('image', f);
+    });
+    const imagesSrc = await sendImagesAPI(imageFormData);
+    const imagesContents = imagesSrc.data.map((src) => {
+      const imageContent = { userId: me.id, roomId: chattingRoom.id, type: 'image', content: src };
+      socket.emit('message', imageContent);
+      return imageContent;
+    });
+
+    setContents(contents.concat(imagesContents));
+  });
 
   useEffect(() => {
     const item = window.localStorage.getItem(chattingRoom.id);
@@ -100,9 +118,11 @@ const ChattingLayout = ({ data, socket, chattingRoom, me }) => {
       />
       <div style={{ height: '70px' }}>해더 공백 블럭</div>
 
-      <div style={{ paddingTop: '10px' }}>
-        <Message contents={contents} me={me} />
-      </div>
+      <FileUploadWraaper onUpload={onUpload}>
+        <div style={{ paddingTop: '10px' }}>
+          <Message contents={contents} me={me} Users={Users} />
+        </div>
+      </FileUploadWraaper>
 
       <div style={{ height: '30px' }}></div>
       <Search

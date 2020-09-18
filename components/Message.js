@@ -37,33 +37,50 @@ const MyMessageBox = styled.div`
 
   background-color: #ffdc00;
 `;
-const Message = ({ contents, me }) => {
+const Message = ({ contents, me, Users }) => {
   let lastChattedUser = 0;
+  const usersObj = useMemo(() => {
+    const obj = {};
+    Users.forEach((user) => {
+      obj[user.id] = user;
+    });
+    return obj;
+  }, [Users]);
   const createView = (elements) => () =>
-    elements.map((item) => {
-      if (item.User.id === me.id) {
+    elements.map((item, index) => {
+      if (item.userId === me.id) {
         lastChattedUser = me.id;
         return (
-          <MyMessageWrap key={item.id}>
-            <MyMessageBox>{item.content}</MyMessageBox>
+          <MyMessageWrap key={index}>
+            <MyMessageBox>
+              {item.type === 'image' ? <img src={item.content} width='200' /> : item.content}
+            </MyMessageBox>
           </MyMessageWrap>
         );
-      } else if (item.User.id === lastChattedUser) {
+      } else if (item.userId === lastChattedUser) {
         return (
-          <SameUserMessageWrap key={item.id}>
-            <AnotherMessageBox>{item.content}</AnotherMessageBox>
+          <SameUserMessageWrap key={index}>
+            <AnotherMessageBox>
+              {item.type === 'image' ? <img src={item.content} width='200' /> : item.content}
+            </AnotherMessageBox>
           </SameUserMessageWrap>
         );
       } else {
-        lastChattedUser = item.User.id;
+        lastChattedUser = item.userId;
         return (
           <CustomComment
-            key={item.id}
-            avatar={<Avatar>{item.User.nickname[0].toUpperCase()}</Avatar>}
-            author={<span style={{ color: '#111111' }}>{item.User.nickname}</span>}
+            key={index}
+            avatar={
+              <Avatar src={usersObj[item.userId].profileImage}>
+                {usersObj[item.userId].nickname[0].toUpperCase()}
+              </Avatar>
+            }
+            author={<span style={{ color: '#111111' }}>{usersObj[item.userId].nickname}</span>}
             content={
               <div>
-                <AnotherMessageBox>{item.content}</AnotherMessageBox>
+                <AnotherMessageBox>
+                  {item.type === 'image' ? <img src={item.content} width='200' /> : item.content}
+                </AnotherMessageBox>
               </div>
             }
           />
