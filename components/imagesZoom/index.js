@@ -38,9 +38,11 @@ function ImagesZoom({ images, onClose, initialSlide }) {
             ))}
           </Slick>
           <Indicator>
-            <div>
-              {currentSlide + 1}/{images.length}
-            </div>
+            {images.length ? (
+              <div>
+                {currentSlide + 1}/{images.length}
+              </div>
+            ) : null}
           </Indicator>
         </div>
       </SlickWrapper>

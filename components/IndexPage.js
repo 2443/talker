@@ -5,6 +5,7 @@ import { filterUsers, loadUser, requestAddFriend, responseAddFriend } from '../a
 import { PlusOutlined, UserOutlined } from '@ant-design/icons';
 import { useState, useCallback, useMemo } from 'react';
 import Item from 'antd/lib/list/Item';
+import UserModal from './UserModal';
 
 const margin10px = { margin: '10px' };
 const border = { borderBottom: '1px solid lightgray' };
@@ -13,6 +14,10 @@ const Home = ({ me }) => {
   const { Users, filteredUsers, searchedUser, loadUserLoading, loadUserDone } = useSelector(
     (state) => state.user
   );
+
+  const [selectedUser, selectUser] = useState(null);
+  const [userModalVisible, setUserModalVisible] = useState(false);
+
   const usersStates = useMemo(() => {
     const returnObject = {
       friend: [],
@@ -24,18 +29,18 @@ const Home = ({ me }) => {
     return returnObject;
   }, [Users]);
 
-  const [selectedUser, setSelectedUser] = useState(null);
+  const [popOveredUser, setPopOverUser] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
 
   const onPopoverChange = useCallback(
     (id) => () => {
-      if (selectedUser === id) {
-        setSelectedUser(null);
+      if (popOveredUser === id) {
+        setPopOverUser(null);
       } else {
-        setSelectedUser(id);
+        setPopOverUser(id);
       }
     },
-    [selectedUser]
+    [popOveredUser]
   );
 
   const onFriendRequestClick = (id) => () => {
@@ -57,6 +62,15 @@ const Home = ({ me }) => {
     setModalVisible(yn);
   };
 
+  const onClickUser = (userIndex) => () => {
+    selectUser(userIndex);
+    setUserModalVisible(true);
+  };
+
+  const onCloseUserModal = () => {
+    setUserModalVisible(false);
+  };
+
   return (
     <>
       <SearchBox placeholder={`친구 (${usersStates.friend.length})`} action={filterUsers} />
@@ -74,8 +88,8 @@ const Home = ({ me }) => {
         size='small'
         bordered={true}
         dataSource={filteredUsers.length ? filteredUsers : usersStates.friend}
-        renderItem={(item) => (
-          <List.Item style={border}>
+        renderItem={(item, index) => (
+          <List.Item style={border} onClick={onClickUser(index)}>
             <List.Item.Meta
               avatar={<Avatar src={item.profileImage}>{item.nickname[0].toUpperCase()}</Avatar>}
               title={item.nickname}
@@ -85,13 +99,18 @@ const Home = ({ me }) => {
           </List.Item>
         )}
       ></List>
+      <UserModal
+        visible={userModalVisible}
+        onClose={onCloseUserModal}
+        user={usersStates.friend[selectedUser]}
+      />
       <div style={{ position: 'fixed', bottom: 20, right: 20 }}>
         <Badge count={usersStates.receive.length}>
           <Avatar shape='square' icon={<PlusOutlined />} onClick={controlModalVisible(true)} />
           <Modal
             title='친구 추가'
             visible={modalVisible}
-            footer={[]}
+            footer={null}
             onCancel={controlModalVisible(false)}
             onOk={controlModalVisible(false)}
           >
@@ -146,7 +165,7 @@ const Home = ({ me }) => {
                       </>
                     }
                     trigger='click'
-                    visible={selectedUser === item.id}
+                    visible={popOveredUser === item.id}
                     onVisibleChange={onPopoverChange(item.id)}
                   >
                     <Button type='primary' icon={<UserOutlined />}></Button>
