@@ -16,7 +16,7 @@ const CustomPageHeader = styled(PageHeader)`
   background-color: #ffffff;
   position: fixed;
   width: 100vw;
-  z-index: 9999;
+  z-index: 3;
 `;
 
 const formLayout = {

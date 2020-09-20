@@ -1,7 +1,8 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
 import { Comment, Avatar } from 'antd';
+import ImagesZoom from './imagesZoom';
 
 const CustomComment = styled(Comment)`
   padding: 0;
@@ -38,6 +39,16 @@ const MyMessageBox = styled.div`
   background-color: #ffdc00;
 `;
 const Message = ({ contents, me, Users }) => {
+  const [viewSlider, setViewSlider] = useState(false);
+  const [initialSlide, setInitialSlide] = useState(null);
+  const onCloseSlider = () => {
+    setViewSlider(false);
+  };
+  const onOpenSlider = (id) => () => {
+    setInitialSlide(id);
+    console.log(id);
+    setViewSlider(true);
+  };
   let lastChattedUser = 0;
   const usersObj = useMemo(() => {
     const obj = {};
@@ -46,6 +57,10 @@ const Message = ({ contents, me, Users }) => {
     });
     return obj;
   }, [Users]);
+  // 일단 만들고 나중에 플레그로 newImage 이런거 추가 예정
+  const images = useMemo(() => {
+    return contents.filter((e) => e.type === 'image');
+  }, [contents]);
   const createView = (elements) => () =>
     elements.map((item, index) => {
       if (item.userId === me.id) {
@@ -53,7 +68,11 @@ const Message = ({ contents, me, Users }) => {
         return (
           <MyMessageWrap key={index}>
             <MyMessageBox>
-              {item.type === 'image' ? <img src={item.content} width='200' /> : item.content}
+              {item.type === 'image' ? (
+                <img src={item.content} width='200' onClick={onOpenSlider(item.content)} />
+              ) : (
+                item.content
+              )}
             </MyMessageBox>
           </MyMessageWrap>
         );
@@ -61,7 +80,11 @@ const Message = ({ contents, me, Users }) => {
         return (
           <SameUserMessageWrap key={index}>
             <AnotherMessageBox>
-              {item.type === 'image' ? <img src={item.content} width='200' /> : item.content}
+              {item.type === 'image' ? (
+                <img src={item.content} width='200' onClick={onOpenSlider(item.content)} />
+              ) : (
+                item.content
+              )}
             </AnotherMessageBox>
           </SameUserMessageWrap>
         );
@@ -79,7 +102,11 @@ const Message = ({ contents, me, Users }) => {
             content={
               <div>
                 <AnotherMessageBox>
-                  {item.type === 'image' ? <img src={item.content} width='200' /> : item.content}
+                  {item.type === 'image' ? (
+                    <img src={item.content} width='200' onClick={onOpenSlider(item.content)} />
+                  ) : (
+                    item.content
+                  )}
                 </AnotherMessageBox>
               </div>
             }
@@ -89,7 +116,14 @@ const Message = ({ contents, me, Users }) => {
     });
 
   const View = useMemo(createView(contents), [contents]);
-  return <>{View}</>;
+  return (
+    <>
+      {View}
+      {viewSlider ? (
+        <ImagesZoom onClose={onCloseSlider} images={images} initialSlide={initialSlide} />
+      ) : null}
+    </>
+  );
 };
 
 Message.propTypes = {

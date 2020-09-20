@@ -1,13 +1,22 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Slick from 'react-slick';
-import { Overlay, Header, CloseBtn, SlickWrapper, ImgWrapper, Indicator, Global } from './styles';
+import {
+  Overlay,
+  Header,
+  CloseBtn,
+  SlickWrapper,
+  ImgWrapper,
+  Indicator,
+  GlobalStyle,
+} from './styles';
 
-function ImagesZoom({ images, onClose }) {
-  const [currentSlide, setCurrentSlide] = useState(0);
+function ImagesZoom({ images, onClose, initialSlide }) {
+  const init = images.findIndex((image) => image.content === initialSlide);
+  const [currentSlide, setCurrentSlide] = useState(init);
   return (
     <Overlay>
-      <Global />
+      <GlobalStyle />
       <Header>
         <h1>상세 이미지</h1>
         <CloseBtn onClick={onClose}>X</CloseBtn>
@@ -15,16 +24,16 @@ function ImagesZoom({ images, onClose }) {
       <SlickWrapper>
         <div>
           <Slick
-            initialSlide={0}
+            initialSlide={init}
             afterChange={(slide) => setCurrentSlide(slide)}
             infinite
             arrows={false}
             slidesToShow={1}
             slidesToScroll={1}
           >
-            {images.map((v) => (
-              <ImgWrapper key={v.src}>
-                <img src={v.src.replace(/\/thumb\//, '/original/')} alt={v.src} />
+            {images.map((v, index) => (
+              <ImgWrapper key={index}>
+                <img src={v.content.replace(/\/thumb\//, '/original/')} alt={v.src} />
               </ImgWrapper>
             ))}
           </Slick>
