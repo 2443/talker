@@ -35,6 +35,11 @@ export const UPLOAD_ROOM_IMAGE_REQUEST = 'UPLOAD_ROOM_IMAGE_REQUEST';
 export const UPLOAD_ROOM_IMAGE_SUCCESS = 'UPLOAD_ROOM_IMAGE_SUCCESS';
 export const UPLOAD_ROOM_IMAGE_FAILURE = 'UPLOAD_ROOM_IMAGE_FAILURE';
 
+export const GET_USER = 'GET_USER';
+export const GET_USER_REQUEST = 'GET_USER_REQUEST';
+export const GET_USER_SUCCESS = 'GET_USER_SUCCESS';
+export const GET_USER_FAILURE = 'GET_USER_FAILURE';
+
 export const REMOVE_ROOM_IMAGE = 'REMOVE_ROOM_IMAGE';
 
 const reducer = (state = initialState, action) => {
@@ -116,6 +121,24 @@ const reducer = (state = initialState, action) => {
         done: true,
       };
     case UPLOAD_ROOM_IMAGE_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+    case GET_USER_REQUEST:
+      return {
+        ...state,
+        loading: true,
+      };
+    case GET_USER_SUCCESS:
+      return {
+        ...state,
+        chattingRoom: action.payload.data,
+        loading: false,
+        done: true,
+      };
+    case GET_USER_FAILURE:
       return {
         ...state,
         loading: false,

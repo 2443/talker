@@ -5,6 +5,7 @@ import {
   LOAD_ROOM,
   UPDATE_ROOM,
   UPLOAD_ROOM_IMAGE,
+  GET_USER,
 } from '../reducers/room';
 import axios from 'axios';
 
@@ -56,6 +57,22 @@ const uploadRoomImageAPI = (data) => {
   }
 };
 
+export const oneOnChatAPI = (data) => {
+  try {
+    return axios.post(`/room/user/${data}`);
+  } catch (error) {
+    return null;
+  }
+};
+
+const getUserAPI = (data) => {
+  try {
+    return axios.get(`/chat/user/${data}`);
+  } catch (error) {
+    return null;
+  }
+};
+
 export const loadRooms = () => ({
   type: LOAD_ROOMS,
   payload: loadRoomsAPI(),
@@ -79,4 +96,8 @@ export const updateRoom = (parameter) => ({
 export const uploadRoomImage = (parameter) => ({
   type: UPLOAD_ROOM_IMAGE,
   payload: uploadRoomImageAPI(parameter),
+});
+export const getUser = (parameter) => ({
+  type: GET_USER,
+  payload: getUserAPI(parameter),
 });

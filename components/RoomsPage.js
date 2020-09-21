@@ -94,6 +94,7 @@ const Room = () => {
         >
           <Input
             placeholder='채팅방 제목'
+            required
             value={roomTitle}
             onChange={changeRoomTitle}
             maxLength={30}
