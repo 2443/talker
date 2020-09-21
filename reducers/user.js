@@ -53,6 +53,11 @@ export const RESPONSE_ADD_FRIEND_REQUEST = 'RESPONSE_ADD_FRIEND_REQUEST';
 export const RESPONSE_ADD_FRIEND_SUCCESS = 'RESPONSE_ADD_FRIEND_SUCCESS';
 export const RESPONSE_ADD_FRIEND_FAILURE = 'RESPONSE_ADD_FRIEND_FAILURE';
 
+export const DELETE_FRIEND = 'DELETE_FRIEND';
+export const DELETE_FRIEND_REQUEST = 'DELETE_FRIEND_REQUEST';
+export const DELETE_FRIEND_SUCCESS = 'DELETE_FRIEND_SUCCESS';
+export const DELETE_FRIEND_FAILURE = 'DELETE_FRIEND_FAILURE';
+
 export const UPDATE_USER = 'UPDATE_USER';
 export const UPDATE_USER_REQUEST = 'UPDATE_USER_REQUEST';
 export const UPDATE_USER_SUCCESS = 'UPDATE_USER_SUCCESS';
@@ -229,6 +234,23 @@ const reducer = (state = initialState, action) => {
         loading: false,
       };
     case UPLOAD_USER_IMAGE_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+    case DELETE_FRIEND_REQUEST:
+      return {
+        ...state,
+        loading: true,
+      };
+    case DELETE_FRIEND_SUCCESS:
+      return {
+        ...state,
+        Users: state.Users.filter((user) => user.id !== action.payload.data),
+        loading: false,
+      };
+    case DELETE_FRIEND_FAILURE:
       return {
         ...state,
         loading: false,

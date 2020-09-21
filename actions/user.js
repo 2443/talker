@@ -9,6 +9,7 @@ import {
   RESPONSE_ADD_FRIEND,
   UPDATE_USER,
   UPLOAD_USER_IMAGE,
+  DELETE_FRIEND,
 } from '../reducers/user';
 import faker from 'faker';
 import shortId from 'shortid';
@@ -89,6 +90,14 @@ const responseAddFriendAPI = (data) => {
   }
 };
 
+const deleteFriendAPI = (data) => {
+  try {
+    return axios.delete(`/user/friend/${data}`);
+  } catch (error) {
+    return null;
+  }
+};
+
 const updateUserAPI = (data) => {
   try {
     return axios.put('/user', data);
@@ -130,6 +139,10 @@ export const requestAddFriend = (parameter) => ({
 export const responseAddFriend = (parameter) => ({
   type: RESPONSE_ADD_FRIEND,
   payload: responseAddFriendAPI(parameter),
+});
+export const deleteFriend = (parameter) => ({
+  type: DELETE_FRIEND,
+  payload: deleteFriendAPI(parameter),
 });
 export const updateUser = (parameter) => ({
   type: UPDATE_USER,
