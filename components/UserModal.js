@@ -10,6 +10,7 @@ import {
 import { useDispatch } from 'react-redux';
 import { oneOnChatAPI } from '../actions/room';
 import { deleteFriend } from '../actions/user';
+import Link from 'next/link';
 
 const UserModal = ({ visible, onClose, user }) => {
   const dispatch = useDispatch();
@@ -40,8 +41,12 @@ const UserModal = ({ visible, onClose, user }) => {
       <p>{user.statusMessage}</p>
 
       <div>
-        <div onClick={onClickOneOnChat(user.id)} style={{ display: 'inline-block', padding: 10 }}>
-          <Avatar size='large' icon={<MessageOutlined />}></Avatar>
+        <div style={{ display: 'inline-block', padding: 10 }}>
+          <Link href={`/user/${user.id}`}>
+            <a>
+              <Avatar size='large' icon={<MessageOutlined />}></Avatar>
+            </a>
+          </Link>
           <p>1:1 대화</p>
         </div>
         <div

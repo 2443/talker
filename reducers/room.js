@@ -75,9 +75,6 @@ const reducer = (state = initialState, action) => {
         loading: true,
       };
     case CREATE_ROOM_SUCCESS:
-      console.log('action.payload.data');
-      console.log(action.payload.data);
-      console.log(state.Rooms);
       return {
         ...state,
         Rooms: [action.payload.data, ...state.Rooms],

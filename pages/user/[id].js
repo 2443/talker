@@ -22,15 +22,14 @@ const ChattingRoom = () => {
   const { id } = router.query;
   const { me } = useSelector((state) => state.user);
   const { chattingRoom } = useSelector((state) => state.room);
-  chattingRoom.name = chattingRoom.nickname;
-  chattingRoom.roomImage = chattingRoom.profileImage;
-  chattingRoom.Users = [];
+  chattingRoom.name = chattingRoom.Users[0].nickname;
+  chattingRoom.roomImage = chattingRoom.Users[0].profileImage;
 
   const isLoggedIn = !!me;
 
   useEffect(() => {
-    if (id && isLoggedIn) {
-      socket.emit('init', { id, name: me.nickname });
+    if (isLoggedIn) {
+      socket.emit('init', { id: chattingRoom.id, name: me.nickname });
       socket.on('message', (data) => {
         setData(data);
       });
@@ -38,7 +37,7 @@ const ChattingRoom = () => {
     if (!isLoggedIn) {
       router.push('/login');
     }
-  }, [id, me]);
+  }, [me]);
 
   if (!isLoggedIn) {
     return null;

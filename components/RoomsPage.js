@@ -65,18 +65,39 @@ const Room = () => {
         bordered={true}
         dataSource={filteredRooms.length ? filteredRooms : Rooms}
         renderItem={(item) => (
-          <Link href={`/room/${item.id}`}>
-            <a>
-              <List.Item style={border}>
-                <List.Item.Meta
-                  avatar={<Avatar src={item.roomImage} />}
-                  title={item.name}
-                  description={item.lastMessage}
-                  style={{ margin: '10px' }}
-                />
-              </List.Item>
-            </a>
-          </Link>
+          <>
+            {item.isOneOnOne ? (
+              <Link href={`/user/${item.Users[0].id}`}>
+                <a>
+                  <List.Item style={border}>
+                    <List.Item.Meta
+                      avatar={
+                        <Avatar src={item.Users[0].profileImage}>
+                          {item.Users[0].nickname[0].toUpperCase()}
+                        </Avatar>
+                      }
+                      title={item.Users[0].nickname}
+                      description={item.lastMessage}
+                      style={{ margin: '10px' }}
+                    />
+                  </List.Item>
+                </a>
+              </Link>
+            ) : (
+              <Link href={`/room/${item.id}`}>
+                <a>
+                  <List.Item style={border}>
+                    <List.Item.Meta
+                      avatar={<Avatar src={item.roomImage}>{item.name[0].toUpperCase()}</Avatar>}
+                      title={item.name}
+                      description={item.lastMessage}
+                      style={{ margin: '10px' }}
+                    />
+                  </List.Item>
+                </a>
+              </Link>
+            )}
+          </>
         )}
       ></List>
       <div style={{ position: 'fixed', bottom: 20, right: 20 }}>
