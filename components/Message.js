@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
 import { Comment, Avatar } from 'antd';
 import ImagesZoom from './imagesZoom';
+import UserModal from './UserModal';
 
 const CustomComment = styled(Comment)`
   padding: 0;
@@ -49,6 +50,19 @@ const Message = ({ contents, me, Users }) => {
     console.log(id);
     setViewSlider(true);
   };
+
+  const [selectedUser, selectUser] = useState(null);
+  const [userModalVisible, setUserModalVisible] = useState(false);
+
+  const onClickUser = (userIndex) => () => {
+    selectUser(userIndex);
+    setUserModalVisible(true);
+  };
+
+  const onCloseUserModal = () => {
+    setUserModalVisible(false);
+  };
+
   let lastChattedUser = 0;
   const usersObj = useMemo(() => {
     const obj = {};
@@ -63,7 +77,7 @@ const Message = ({ contents, me, Users }) => {
   }, [contents]);
   const createView = (elements) => () =>
     elements.map((item, index) => {
-      if (item.userId === me.id) {
+      if (item.UserId === me.id) {
         lastChattedUser = me.id;
         return (
           <MyMessageWrap key={index}>
@@ -76,7 +90,7 @@ const Message = ({ contents, me, Users }) => {
             </MyMessageBox>
           </MyMessageWrap>
         );
-      } else if (item.userId === lastChattedUser) {
+      } else if (item.UserId === lastChattedUser) {
         return (
           <SameUserMessageWrap key={index}>
             <AnotherMessageBox>
@@ -89,16 +103,16 @@ const Message = ({ contents, me, Users }) => {
           </SameUserMessageWrap>
         );
       } else {
-        lastChattedUser = item.userId;
+        lastChattedUser = item.UserId;
         return (
           <CustomComment
             key={index}
             avatar={
-              <Avatar src={usersObj[item.userId].profileImage}>
-                {usersObj[item.userId].nickname[0].toUpperCase()}
+              <Avatar src={usersObj[item.UserId].profileImage} onClick={onClickUser(item.UserId)}>
+                {usersObj[item.UserId].nickname[0].toUpperCase()}
               </Avatar>
             }
-            author={<span style={{ color: '#111111' }}>{usersObj[item.userId].nickname}</span>}
+            author={<span style={{ color: '#111111' }}>{usersObj[item.UserId].nickname}</span>}
             content={
               <div>
                 <AnotherMessageBox>
@@ -122,6 +136,11 @@ const Message = ({ contents, me, Users }) => {
       {viewSlider ? (
         <ImagesZoom onClose={onCloseSlider} images={images} initialSlide={initialSlide} />
       ) : null}
+      <UserModal
+        visible={userModalVisible}
+        onClose={onCloseUserModal}
+        user={usersObj[selectedUser]}
+      />
     </>
   );
 };

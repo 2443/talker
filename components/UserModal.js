@@ -15,12 +15,12 @@ import Link from 'next/link';
 const UserModal = ({ visible, onClose, user }) => {
   const dispatch = useDispatch();
 
-  const onClickOneOnChat = (userId) => async () => {
-    const response = await oneOnChatAPI(userId);
+  const onClickOneOnChat = (UserId) => async () => {
+    const response = await oneOnChatAPI(UserId);
   };
 
-  const onClickDeleteFriend = (userId) => () => {
-    dispatch(deleteFriend(userId));
+  const onClickDeleteFriend = (UserId) => () => {
+    dispatch(deleteFriend(UserId));
     onClose();
   };
 

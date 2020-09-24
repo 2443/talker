@@ -34,7 +34,7 @@ const Room = () => {
       if (e.target.checked) {
         setRoomUsers(roomUsers.concat(e.target.value));
       } else {
-        setRoomUsers(roomUsers.filter((userId) => userId !== e.target.value));
+        setRoomUsers(roomUsers.filter((UserId) => UserId !== e.target.value));
       }
     },
     [roomUsers]
