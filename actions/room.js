@@ -9,7 +9,7 @@ import {
 } from '../reducers/room';
 import axios from 'axios';
 
-function delay(time, data = null) {
+export function delay(time, data = null) {
   return new Promise((resolve) =>
     setTimeout(() => {
       resolve(data);

@@ -4,12 +4,14 @@ import SearchBox from '../components/SearchBox';
 import { List, Avatar, Button, Checkbox, Input } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState, useMemo, useCallback } from 'react';
-import { loadRooms, filterRooms, createRoom } from '../actions/room';
+import { loadRooms, filterRooms, createRoom, delay } from '../actions/room';
 import Link from 'next/link';
 import Modal from 'antd/lib/modal/Modal';
 import { filterUsers } from '../actions/user';
 import { PlusOutlined } from '@ant-design/icons';
 import useInput from '../hooks/useInput';
+import { loadNewChatAPI } from '../actions/chat';
+import { LOAD_NEW_CHAT_SUCCESS } from '../reducers/room';
 
 const border = { borderBottom: '1px solid lightgray' };
 
@@ -20,6 +22,7 @@ const Room = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [roomUsers, setRoomUsers] = useState([]);
   const [roomTitle, setRoomTitle, changeRoomTitle] = useInput('');
+  const [intervalRef, setIntervalRef] = useState(null);
 
   const friends = useMemo(() => Users.filter((e) => e.state === 'friend'), [Users]);
 
@@ -53,9 +56,36 @@ const Room = () => {
     }
   }, [done]);
 
+  const loadNewChat = async (Rooms) => {
+    console.log(Rooms);
+
+    try {
+      if (Rooms.length) {
+        const roomsData = Rooms.map(({ id, lastChatTime }) => ({ RoomId: id, lastChatTime }));
+        const result = await loadNewChatAPI({ roomsData });
+        console.log(result.data);
+        dispatch({
+          type: LOAD_NEW_CHAT_SUCCESS,
+          payload: result,
+        });
+      }
+    } catch (err) {}
+  };
   useEffect(() => {
     dispatch(loadRooms());
+    loadNewChat();
   }, []);
+
+  useEffect(() => {
+    console.log('in useEffect', Rooms);
+    if (intervalRef !== null) {
+      clearInterval(intervalRef);
+    }
+    const ref = setInterval(() => {
+      loadNewChat(Rooms);
+    }, 5000);
+    setIntervalRef(ref);
+  }, [Rooms]);
 
   return (
     <>

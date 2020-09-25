@@ -40,6 +40,8 @@ export const GET_USER_REQUEST = 'GET_USER_REQUEST';
 export const GET_USER_SUCCESS = 'GET_USER_SUCCESS';
 export const GET_USER_FAILURE = 'GET_USER_FAILURE';
 
+export const LOAD_NEW_CHAT_SUCCESS = 'LOAD_NEW_CHAT_SUCCESS';
+
 export const REMOVE_ROOM_IMAGE = 'REMOVE_ROOM_IMAGE';
 
 const reducer = (state = initialState, action) => {
@@ -50,18 +52,29 @@ const reducer = (state = initialState, action) => {
         ...state,
         loading: true,
       };
-    case LOAD_ROOM_SUCCESS:
+    case LOAD_ROOM_SUCCESS: {
       return {
         ...state,
         chattingRoom: action.payload.data,
         loading: false,
       };
-    case LOAD_ROOMS_SUCCESS:
+    }
+    case LOAD_ROOMS_SUCCESS: {
+      const roomsData = action.payload.data;
+
+      const Rooms = roomsData.map((room) => {
+        const localData = window.localStorage.getItem(room.id);
+        const chattingData = localData ? JSON.parse(localData) : [];
+        const lastChat = chattingData[chattingData.length - 1];
+        return { ...room, lastMessage: lastChat?.content, lastChatTime: lastChat?.createdAt };
+      });
+
       return {
         ...state,
-        Rooms: action.payload.data,
+        Rooms,
         loading: false,
       };
+    }
     case LOAD_ROOM_FAILURE:
     case LOAD_ROOMS_FAILURE:
       return {
@@ -152,6 +165,24 @@ const reducer = (state = initialState, action) => {
         ...state,
         chattingRoom: { ...state.chattingRoom, roomImage: null },
       };
+    case LOAD_NEW_CHAT_SUCCESS: {
+      action.payload.data.map((room) => {
+        const localChatData = window.localStorage.getItem(room.id);
+        const toJsonChattingData = localChatData ? JSON.parse(localChatData) : [];
+        const newChattingData = toJsonChattingData.concat(room.Chats);
+        window.localStorage.setItem(room.id, JSON.stringify(newChattingData));
+
+        const targetIndex = state.Rooms.findIndex((stateRoom) => stateRoom.id === room.id);
+        state.Rooms[targetIndex] = {
+          ...state.Rooms[targetIndex],
+          lastChatTime: room.Chats[room.Chats.length - 1].createdAt,
+          lastMessage: room.Chats[room.Chats.length - 1].content,
+        };
+      });
+      return {
+        ...state,
+      };
+    }
     default:
       return state;
   }

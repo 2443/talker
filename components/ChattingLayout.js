@@ -62,7 +62,7 @@ const ChattingLayout = ({ data, socket, chattingRoom, me }) => {
     console.log(message);
     if (!!message.trim()) {
       socket.emit('message', { UserId: me.id, content: message, RoomId: chattingRoom.id });
-      setContents(contents.concat({ UserId: me.id, content: message }));
+      setContents(contents.concat({ UserId: me.id, content: message, createdAt: new Date() }));
       setMessage('');
       setTimeout(() => {
         window.scrollTo(0, document.body.scrollHeight + 100);
@@ -84,7 +84,13 @@ const ChattingLayout = ({ data, socket, chattingRoom, me }) => {
     });
     const imagesSrc = await sendImagesAPI(imageFormData);
     const imagesContents = imagesSrc.data.map((src) => {
-      const imageContent = { UserId: me.id, RoomId: chattingRoom.id, type: 'image', content: src };
+      const imageContent = {
+        UserId: me.id,
+        RoomId: chattingRoom.id,
+        type: 'image',
+        content: src,
+        createdAt: new Date(),
+      };
       socket.emit('message', imageContent);
       return imageContent;
     });

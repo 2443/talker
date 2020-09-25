@@ -7,3 +7,11 @@ export const sendImagesAPI = (data) => {
     return null;
   }
 };
+
+export const loadNewChatAPI = (data) => {
+  try {
+    return axios.post('/', data);
+  } catch (error) {
+    return null;
+  }
+};
